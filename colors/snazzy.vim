@@ -180,6 +180,62 @@ let g:terminal_color_15 = '#eff0eb'
 " JavaScript
 :exe  'highlight  javaScriptBoolean        guifg='.cyan.'    guibg=NONE    guisp=NONE    gui=NONE       ctermfg=235   ctermbg=60    cterm=NONE'
 
+" Highlighting function {{{
+function! s:HL(group, fg, ...)
+  " Arguments: group, guifg, guibg, gui, guisp
+
+  " foreground
+  let fg = a:fg
+
+  " background
+  if a:0 >= 1
+    let bg = a:1
+  else
+    let bg = s:none
+  endif
+
+  " emphasis
+  if a:0 >= 2 && strlen(a:2)
+    let emstr = a:2
+  else
+    let emstr = 'NONE,'
+  endif
+
+  let histring = [ 'hi', a:group,
+        \ 'guifg=' . fg[0], 'ctermfg=' . fg[1],
+        \ 'guibg=' . bg[0], 'ctermbg=' . bg[1],
+        \ 'gui=' . emstr[:-2], 'cterm=' . emstr[:-2]
+        \ ]
+
+  " special
+  if a:0 >= 3
+    call add(histring, 'guisp=' . a:3[0])
+  endif
+
+  execute join(histring, ' ')
+endfunction
+" }}}
+
+" Setup Emphasis: {{{
+let s:bold = 'bold,'
+let s:italic = 'italic,'
+let s:underline = 'underline,'
+let s:undercurl = 'undercurl,'
+let s:inverse = 'inverse,'
+" }}}
+
+" Setup Colors: {{{
+let s:vim_bg = ['bg', 'bg']
+let s:vim_fg = ['fg', 'fg']
+let s:none = ['NONE', 'NONE']
+" }}}
+
+" coc.nvim
+call s:HL('CocErrorHighlight', s:none, s:none, s:undercurl, red)
+call s:HL('CocWarningHighlight', s:none, s:none, s:undercurl, yellow)
+call s:HL('CocInfoHighlight', s:none, s:none, s:undercurl, magenta)
+call s:HL('CocHintHighlight', s:none, s:none, s:undercurl, blue)
+
 " CSS
 :exe  'highlight  cssProp        guifg='.ui_0.'    guibg=NONE    guisp=NONE    gui=NONE       ctermfg=235   ctermbg=60    cterm=NONE'
 :exe  'highlight  cssAttrComma        guifg='.ui_0.'    guibg=NONE    guisp=NONE    gui=NONE       ctermfg=235   ctermbg=60    cterm=NONE'
